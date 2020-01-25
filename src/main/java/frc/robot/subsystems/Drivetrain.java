@@ -83,6 +83,8 @@ public class Drivetrain extends SubsystemBase {
    */
   public Drivetrain() {
 
+    m_ahrs.zeroYaw();
+
     applyToTalons(TalonGroup.kAll, allTalons -> {
 
       allTalons.configFactoryDefault();
@@ -110,13 +112,16 @@ public class Drivetrain extends SubsystemBase {
     // pid
     m_leftPidController.disableContinuousInput();
     m_rightPidController.disableContinuousInput();
-    SmartDashboard.putData(m_leftPidController);
-    SmartDashboard.putData(m_rightPidController);
+    SmartDashboard.putData("leftPidController", m_leftPidController);
+    SmartDashboard.putData("rightPidController", m_rightPidController);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    SmartDashboard.putNumber("yaw", getAngle());
+
     m_masterLeftTalon.pidWrite(m_leftPidController.calculate(
       m_masterLeftTalon.getSelectedSensorVelocity(),
       m_masterLeftTalon.get() * Constants.Drivetrain.kMaxVelocity) / (float)Constants.Drivetrain.kMaxVelocity
@@ -151,7 +156,7 @@ public class Drivetrain extends SubsystemBase {
     m_drive.arcadeDrive(speed, rot, square);
   }
 
-  public double getYaw() {
+  public double getAngle() {
     return m_ahrs.getYaw();
   }
 }

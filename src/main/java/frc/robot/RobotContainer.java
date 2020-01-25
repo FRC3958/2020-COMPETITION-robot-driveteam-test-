@@ -56,11 +56,14 @@ public class RobotContainer {
     
     // turn left or right 90 degrees based on bumper input
 
+    new JoystickButton(m_driverController, XboxController.Button.kStart.value)
+      .whenPressed(new TurnToAngle(m_drivetrain.getAngle() + 180.f, m_drivetrain).withTimeout(5.f));
+
     new JoystickButton(m_driverController, XboxController.Button.kBumperLeft.value)
-      .whenPressed(new TurnToAngle(m_drivetrain.getYaw() - 90.f, m_drivetrain).withTimeout(5.f));
+      .whenPressed(new TurnToAngle(m_drivetrain.getAngle() - 90.f, m_drivetrain).withTimeout(5.f));
 
     new JoystickButton(m_driverController, XboxController.Button.kBumperRight.value)
-      .whenPressed(new TurnToAngle(m_drivetrain.getYaw() + 90.f, m_drivetrain).withTimeout(5.f));
+      .whenPressed(new TurnToAngle(m_drivetrain.getAngle() + 90.f, m_drivetrain).withTimeout(5.f));
   }
   /*
 {
