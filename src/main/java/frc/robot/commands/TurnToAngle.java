@@ -21,9 +21,9 @@ public class TurnToAngle extends PIDCommand {
   public TurnToAngle(double targetAngle, Drivetrain driveTrain) {
     super(
         // The controller that the command will use
-        new PIDController(.5f, 0, 0),
+        new PIDController(0.f, 0.f, 0.f),
         // This should return the measurement
-        driveTrain::getAngle,
+        driveTrain::getYaw,
         // This should return the setpoint (can also be a constant)
         targetAngle,
         // This uses the output
@@ -34,11 +34,11 @@ public class TurnToAngle extends PIDCommand {
     );
 
     // Use addRequirements() here to declare subsystem dependencies.
-    // Configure additional PID options by calling `getController` here.
     addRequirements(driveTrain);
 
+    // Configure additional PID options by calling `getController` here.
     getController().enableContinuousInput(-180.f, 180.f);
-    //getController().setTolerance(5.f);
+    getController().setTolerance(3.f /*degrees*/);
   }
 
   // Returns true when the command should end.

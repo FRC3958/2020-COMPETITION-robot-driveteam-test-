@@ -43,8 +43,8 @@ public class Drivetrain extends SubsystemBase {
 
   private final DifferentialDrive m_drive = new DifferentialDrive(m_masterLeftTalon, m_masterRightTalon);
 
-  private final PIDController m_leftPidController = new PIDController(0.f, 0.f, 0.f);
-  private final PIDController m_rightPidController = new PIDController(0.f, 0.f, 0.f);
+  // private final PIDController m_leftPidController = new PIDController(0.f, 0.f, 0.f);
+  // private final PIDController m_rightPidController = new PIDController(0.f, 0.f, 0.f);
 
   private void applyToTalons(TalonGroup group, Consumer<WPI_TalonSRX> consumer) {
     switch(group) {
@@ -83,6 +83,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public Drivetrain() {
 
+    // reset to defaults
     m_ahrs.zeroYaw();
 
     applyToTalons(TalonGroup.kAll, allTalons -> {
@@ -95,11 +96,12 @@ public class Drivetrain extends SubsystemBase {
     m_slaveLeftTalon.follow(m_masterLeftTalon);
     m_slaveRightTalon.follow(m_masterRightTalon);
 
+    // invert motors
     m_drive.setRightSideInverted(false);
 
-    // invert motors
     m_masterLeftTalon.setInverted(InvertType.InvertMotorOutput);
     m_masterRightTalon.setInverted(InvertType.None);
+    
     applyToTalons(TalonGroup.kSlaves, slaveTalons -> slaveTalons.setInverted(InvertType.FollowMaster));
 
     // setup encoders
@@ -110,37 +112,18 @@ public class Drivetrain extends SubsystemBase {
     });
 
     // pid
-    m_leftPidController.disableContinuousInput();
-    m_rightPidController.disableContinuousInput();
-    SmartDashboard.putData("leftPidController", m_leftPidController);
-    SmartDashboard.putData("rightPidController", m_rightPidController);
+    // m_leftPidController.disableContinuousInput();
+    // m_rightPidController.disableContinuousInput();
+    // SmartDashboard.putData("leftPidController", m_leftPidController);
+    // SmartDashboard.putData("rightPidController", m_rightPidController);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
 
-    SmartDashboard.putNumber("yaw", getAngle());
+    SmartDashboard.putNumber("yaw", getYaw());
 
-    m_masterLeftTalon.pidWrite(m_leftPidController.calculate(
-      m_masterLeftTalon.getSelectedSensorVelocity(),
-      m_masterLeftTalon.get() * Constants.Drivetrain.kMaxVelocity) / (float)Constants.Drivetrain.kMaxVelocity
-    );
-
-    m_masterRightTalon.pidWrite(m_rightPidController.calculate(
-      m_masterRightTalon.getSelectedSensorVelocity(), 
-      m_masterRightTalon.get() * Constants.Drivetrain.kMaxVelocity)  / (float)Constants.Drivetrain.kMaxVelocity
-    );
-  }
-
-  public void cheesyDrive(double speed, double rot, boolean isQuickTurn) {
-    m_drive.curvatureDrive(speed, rot, isQuickTurn);
-  }
-
-  public void arcadeDrive(double speed, double rot) {
-    
-    m_drive.arcadeDrive(speed, rot);
-    
     // m_masterLeftTalon.pidWrite(m_leftPidController.calculate(
     //   m_masterLeftTalon.getSelectedSensorVelocity(),
     //   m_masterLeftTalon.get() * Constants.Drivetrain.kMaxVelocity) / (float)Constants.Drivetrain.kMaxVelocity
@@ -152,11 +135,27 @@ public class Drivetrain extends SubsystemBase {
     // );
   }
 
-  public void arcadeDrive(double speed, double rot, boolean square) {
-    m_drive.arcadeDrive(speed, rot, square);
+  public void tankDrive(double leftSpeed, double rightSpeed) {
+    m_drive.tankDrive(leftSpeed, rightSpeed);
   }
 
-  public double getAngle() {
+  public void arcadeDrive(double speed, double rot) {
+    m_drive.arcadeDrive(speed, rot);
+  }
+
+  public void resetYaw() {
+    m_ahrs.zeroYaw();
+  }
+
+  public double getYaw() {
     return m_ahrs.getYaw();
+  }
+
+  public double getDistance() {
+    return (float)(m_masterLeftTalon.getSelectedSensorPosition() + m_masterRightTalon.getSelectedSensorPosition()) / 2.f;
+  }
+
+  public double getVelocity() {
+    return (float)(m_masterLeftTalon.getSelectedSensorVelocity() + m_masterRightTalon.getSelectedSensorVelocity()) / 2.f;
   }
 }

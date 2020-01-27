@@ -9,7 +9,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.Drivetrain;
@@ -54,16 +53,16 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
-    // turn left or right 90 degrees based on bumper input
-
+    // zero yaw on start button
     new JoystickButton(m_driverController, XboxController.Button.kStart.value)
-      .whenPressed(new TurnToAngle(m_drivetrain.getAngle() + 180.f, m_drivetrain).withTimeout(5.f));
+      .whenPressed(new RunCommand(() -> m_drivetrain.resetYaw(), m_drivetrain));
 
+    // turn to absolute left or right on bumpers
     new JoystickButton(m_driverController, XboxController.Button.kBumperLeft.value)
-      .whenPressed(new TurnToAngle(m_drivetrain.getAngle() - 90.f, m_drivetrain).withTimeout(5.f));
+      .whenPressed(new TurnToAngle(-90.f, m_drivetrain).withTimeout(5.f));
 
     new JoystickButton(m_driverController, XboxController.Button.kBumperRight.value)
-      .whenPressed(new TurnToAngle(m_drivetrain.getAngle() + 90.f, m_drivetrain).withTimeout(5.f));
+      .whenPressed(new TurnToAngle(90.f, m_drivetrain).withTimeout(5.f));
   }
   /*
 {
