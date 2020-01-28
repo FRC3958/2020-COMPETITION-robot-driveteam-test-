@@ -17,41 +17,30 @@ public class Limelight extends SubsystemBase {
   /**
    * Creates a new Limelight.
    */
+  static NetworkTable table;
+
   public Limelight() {
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-   NetworkTableEntry tx = table.getEntry("tx");
-  NetworkTableEntry ty = table.getEntry("ty");
-  NetworkTableEntry ta = table.getEntry("ta");
-
-//read values periodically
-  double x = tx.getDouble(0.0);
-  double y = ty.getDouble(0.0);
-  double area = ta.getDouble(0.0);
-
-//post to smart dashboard periodically
-  SmartDashboard.putNumber("LimelightX", x);
-  SmartDashboard.putNumber("LimelightY", y);
-  SmartDashboard.putNumber("LimelightArea", area);
-  }
-  public void autoalign(){
-    //need to tune kp and mincommand
-    double kp = -0.1;
-    double mincommand = 0.05;
-    
-    double error = -x;
-    double adjust = 0;
-    if (-error > 1.0){
-
-      adjust = kp*error-mincommand;
-
-    }
-    else if (-error > 1.0){
-
-      adjust = kp*error + mincommand;
-
-    }
+    table = NetworkTableInstance.getDefault().getTable("limelight");
 
   }
+
+  public static double getAngleX() {
+    return table.getEntry("tx").getDouble(0);
+  }
+
+  public static double getAngleY() {
+    return table.getEntry("ty").getDouble(0);
+  }
+
+  public static  double getArea() {
+    return table.getEntry("ta").getDouble(0);
+  }
+
+  public static  double getSkew() {
+    return table.getEntry("ts").getDouble(0);
+  }
+
+  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

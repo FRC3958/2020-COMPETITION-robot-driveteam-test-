@@ -67,6 +67,7 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, XboxController.Button.kBumperRight.value)
       .whenPressed(new TurnToAngle(90.f, m_drivetrain).withTimeout(5.f));
+      new JoystickButton(m_driverController,1 ).whenPressed(m_autoalign);
   }
   /*
 {
