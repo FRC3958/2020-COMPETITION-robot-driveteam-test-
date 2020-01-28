@@ -9,9 +9,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.Autoaligncommand;
 import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -29,9 +31,11 @@ public class RobotContainer {
 
   // Subsystems
   public final static Drivetrain m_drivetrain = new Drivetrain();
+  public final static Limelight m_limelight = new Limelight();
 
   // Drivetrain
   private final AutonomousCommand m_autoCommand = new AutonomousCommand(m_drivetrain);
+  private final Autoaligncommand m_autoalign = new Autoaligncommand(m_limelight);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
