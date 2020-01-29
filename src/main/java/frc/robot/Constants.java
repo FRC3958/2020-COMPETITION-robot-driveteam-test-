@@ -35,9 +35,14 @@ public final class Constants {
          * IN TALON UNITS!!!!!!!!!!! NOT m/s!!!!!!
          */
         public static final int kMaxVelocity = 2950;
+
+        
     }
 
     public static final class OI {
         public static final int kDriverControllerPort = 0;
     }
+
+	public static double kp = -0.1;
+	public static double mincommand = 0.05;
 }
