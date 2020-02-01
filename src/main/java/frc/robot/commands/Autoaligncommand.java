@@ -28,7 +28,7 @@ public class Autoaligncommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-   RobotContainer.m_limelight.autoalign();
+   //RobotContainer.m_limelight.autoalign();
 
   }
 

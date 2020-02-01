@@ -20,50 +20,81 @@ public class Limelight extends SubsystemBase {
    */
 
     public Limelight(){
-      NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-      NetworkTableEntry tx = table.getEntry("tx");
-     NetworkTableEntry ty = table.getEntry("ty");
-     NetworkTableEntry ta = table.getEntry("ta");
-   
-   //read values periodically
-     double x = tx.getDouble(0.0);
-     double y = ty.getDouble(0.0);
-     double area = ta.getDouble(0.0);
-   
-   //post to smart dashboard periodically
-     SmartDashboard.putNumber("LimelightX", x);
-     SmartDashboard.putNumber("LimelightY", y);
-     SmartDashboard.putNumber("LimelightArea", area);
-    
+      
 
     }
-   
-
+    
+    public static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    public static NetworkTableEntry tx = table.getEntry("tx");
+    public NetworkTableEntry ty = table.getEntry("ty");
+    public NetworkTableEntry ta = table.getEntry("ta");
+    public NetworkTableEntry LED = table.getEntry("ledMode");
+    public boolean operatorAlign = true; 
+    public static double offsetRatio = 15;
+    public static double offsetInDegrees = 3.3;
+    public SmartDashboard sDashboard;
   
-  public void autoalign(){
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    NetworkTableEntry tx = table.getEntry("tx");
-    double x = tx.getDouble(0.0);
-     double kp = Constants.kp;
-     double mincommand = Constants.mincommand;
-     double error = -x;
-      double adjust = 0.0;
-     if (-error < 1.0){
-
-        adjust = kp * error - mincommand;
-     }
-     if(-error > 1.0){
-
-      adjust = kp * error + mincommand;
-
-     }
-     
-
+    public double getOffsetDegrees(){
+      return offsetInDegrees;
+    }
+    public static double getLimelightXOffset() {
+      double x = tx.getDouble(0.0);
+      return x;
+    }
+  
+    public double getLimelightYOffset() {
+      double y = ty.getDouble(0.0);
+      return y;
+    }
+  
+    public double getLimelightTargetArea() {
+      double a = ta.getDouble(0.0);
+      return a;
+    }
+  
+    public boolean getOperatorAllign() {
+      return operatorAlign;
+    }
+  
+    public static double getRotation() {
+      // Negetive is Left
+      // Positive is Right
+      return (getLimelightXOffset() - offsetInDegrees) / offsetRatio;
+    }
+  
+    public void setLEDState(double value){
+      LED.setNumber(value);
+    }
+  
+    public void switchOperatorControl() {
+      operatorAlign = !operatorAlign;
+    }
+  
+    public void setCameraMode() {
+      if (operatorAlign) {
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+      } else {
+  
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+      }
+    }
+    public void sendToDashboard(){
+      SmartDashboard.putString("IsThisConnected", NetworkTableInstance.getDefault().getTable("limelight").getSubTables().toString()); 
+      SmartDashboard.putNumber("Limelight X", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0));
+      //SmartDashboard.putNumber("Limelight Y", getLimelightYOffset());
+      //SmartDashboard.putNumber("Limelight A", getLimelightTargetArea());
+    }
+  
+    @Override
+    public void periodic() {
+      sendToDashboard();
+      // This method will be called once per scheduler run
+    }
   }
+
   
+ 
   
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-}
+
