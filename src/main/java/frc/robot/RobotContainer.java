@@ -35,7 +35,7 @@ public class RobotContainer {
 
   // Drivetrain
   private final AutonomousCommand m_autoCommand = new AutonomousCommand(m_drivetrain);
-  private final Autoaligncommand m_autoalign = new Autoaligncommand(m_limelight);
+  private final Autoaligncommand m_autoalign = new Autoaligncommand(m_limelight,m_drivetrain.m_ahrs);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.

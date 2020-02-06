@@ -15,7 +15,7 @@ import com.kauailabs.navx.frc.AHRS;
 public class Autoaligncommand extends CommandBase {
 
   private static final double targetHeight = 67.75; // in to center of target
-  private static final double cameraHeight = 25.75;
+  private static final double cameraHeight = 12.1;
   // Can use the Limelight crosshair calibration instead of the next two options
   // (it's easier and compensates for the mount angle of the camera in the
   // Limelight)
@@ -38,7 +38,7 @@ public class Autoaligncommand extends CommandBase {
   public Autoaligncommand(Limelight l, AHRS ahrs) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(l);
-    this.l = l;
+    this.limelight = l;
     this.ahrs = ahrs;
   }
 

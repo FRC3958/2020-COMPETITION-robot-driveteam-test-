@@ -19,7 +19,7 @@ public class Limelight extends SubsystemBase {
    * Creates a new Limelight.
    */
 
-  public class Limelight extends SubsystemBase {
+ 
 
     // Limelight docs say to use at least 11ms
     private static final double imageCaptureLatency = 11; // ms
@@ -102,7 +102,8 @@ public class Limelight extends SubsystemBase {
   
     @Override
     public void periodic() {
-      // This method will be called once per scheduler run
+      // This method will be called once per scheduler 
+      SmartDashboard.putNumber( "tx value", getTargetHorizAngle());
     }
   
     /**

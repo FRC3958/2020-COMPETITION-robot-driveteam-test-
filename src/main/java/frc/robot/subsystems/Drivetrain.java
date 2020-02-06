@@ -33,13 +33,15 @@ public class Drivetrain extends SubsystemBase {
     kMasters,
     kSlaves
   }
+
+
   
   private final WPI_TalonSRX m_masterLeftTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kBackLeftTalonPort);
   private final WPI_TalonSRX m_slaveLeftTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kFrontLeftTalonPort);
   private final WPI_TalonSRX m_masterRightTalon =  new WPI_TalonSRX(Constants.Drivetrain.Map.kBackRightTalonPort);
   private final WPI_TalonSRX m_slaveRightTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kFrontRightTalonPort);
 
-  private final AHRS m_ahrs = new AHRS(SPI.Port.kMXP);
+  public final AHRS m_ahrs = new AHRS(SPI.Port.kMXP);
 
   private final DifferentialDrive m_drive = new DifferentialDrive(m_masterLeftTalon, m_masterRightTalon);
 
@@ -158,6 +160,7 @@ public class Drivetrain extends SubsystemBase {
   public double getVelocity() {
     return (float)(m_masterLeftTalon.getSelectedSensorVelocity() + m_masterRightTalon.getSelectedSensorVelocity()) / 2.f;
   }
+ 
   
   
 }
