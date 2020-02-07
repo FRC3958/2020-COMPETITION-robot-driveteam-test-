@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import java.sql.Time;
 import java.util.function.Consumer;
 
 //import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -18,32 +19,33 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+
 public class Drivetrain extends SubsystemBase {
 
   public enum TalonGroup {
-    kAll,
-    kLeft,
-    kRight,
-    kMasters,
-    kSlaves
+    kAll, kLeft, kRight, kMasters, kSlaves
   }
-
-
-  
+  NetworkTable vision_table = NetworkTableInstance.getDefault().getTable("limelight");
+ 
   private final WPI_TalonSRX m_masterLeftTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kBackLeftTalonPort);
   private final WPI_TalonSRX m_slaveLeftTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kFrontLeftTalonPort);
-  private final WPI_TalonSRX m_masterRightTalon =  new WPI_TalonSRX(Constants.Drivetrain.Map.kBackRightTalonPort);
+  private final WPI_TalonSRX m_masterRightTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kBackRightTalonPort);
   private final WPI_TalonSRX m_slaveRightTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kFrontRightTalonPort);
 
   public final AHRS m_ahrs = new AHRS(SPI.Port.kMXP);
 
   private final DifferentialDrive m_drive = new DifferentialDrive(m_masterLeftTalon, m_masterRightTalon);
+  NetworkTableEntry offset = vision_table.getEntry("tx");
 
   // private final PIDController m_leftPidController = new PIDController(0.f, 0.f, 0.f);
   // private final PIDController m_rightPidController = new PIDController(0.f, 0.f, 0.f);
@@ -80,10 +82,14 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+  //Timer timer = new Timer();
+
   /**
    * Creates a new DriveSubsystem.
    */
   public Drivetrain() {
+
+    //timer.start();
 
     // reset to defaults
     m_ahrs.zeroYaw();
@@ -91,7 +97,7 @@ public class Drivetrain extends SubsystemBase {
     applyToTalons(TalonGroup.kAll, allTalons -> {
 
       allTalons.configFactoryDefault();
-      allTalons.setNeutralMode(NeutralMode.Brake);
+      allTalons.setNeutralMode(NeutralMode.Coast);
     });
 
     // slavery
@@ -125,6 +131,9 @@ public class Drivetrain extends SubsystemBase {
     // This method will be called once per scheduler run
 
     SmartDashboard.putNumber("yaw", getYaw());
+    SmartDashboard.putNumber("tx", offset);
+
+    //System.out.println(timer.get() + ": " + getYaw());
 
     // m_masterLeftTalon.pidWrite(m_leftPidController.calculate(
     //   m_masterLeftTalon.getSelectedSensorVelocity(),
@@ -160,7 +169,24 @@ public class Drivetrain extends SubsystemBase {
   public double getVelocity() {
     return (float)(m_masterLeftTalon.getSelectedSensorVelocity() + m_masterRightTalon.getSelectedSensorVelocity()) / 2.f;
   }
- 
+  public void limelightalign(){
+
+    double output = 0;
+    output = offset.getDouble(0.0) * -0.1;
+    output  = output* 0.5;
+      set(-output,output);
+
+  }
+  public void set(double left, double right){
+
+    m_masterLeftTalon.set(left*0.5);
+    m_slaveLeftTalon.set(left*0.5);
+    m_masterRightTalon.set(right*0.5);
+    m_slaveLeftTalon.set(right*0.5);
+
+  }
+
+  
   
   
 }
