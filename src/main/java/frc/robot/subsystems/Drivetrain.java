@@ -46,6 +46,7 @@ public class Drivetrain extends SubsystemBase {
 
   private final DifferentialDrive m_drive = new DifferentialDrive(m_masterLeftTalon, m_masterRightTalon);
   NetworkTableEntry offset = vision_table.getEntry("tx");
+  double p;
 
   // private final PIDController m_leftPidController = new PIDController(0.f, 0.f, 0.f);
   // private final PIDController m_rightPidController = new PIDController(0.f, 0.f, 0.f);
@@ -117,6 +118,7 @@ public class Drivetrain extends SubsystemBase {
 
       masterTalons.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
       masterTalons.setSensorPhase(true);
+      
     });
 
     // pid
@@ -131,7 +133,8 @@ public class Drivetrain extends SubsystemBase {
     // This method will be called once per scheduler run
 
     SmartDashboard.putNumber("yaw", getYaw());
-    SmartDashboard.putNumber("tx", offset);
+    SmartDashboard.putNumber("tx", gettx());
+    SmartDashboard.putNumber(" p value for align",p );
 
     //System.out.println(timer.get() + ": " + getYaw());
 
@@ -144,6 +147,21 @@ public class Drivetrain extends SubsystemBase {
     //   m_masterRightTalon.getSelectedSensorVelocity(), 
     //   m_masterRightTalon.get() * Constants.Drivetrain.kMaxVelocity)  / (float)Constants.Drivetrain.kMaxVelocity
     // );
+  }
+  public void limelightalign(){
+
+    double output = 0;
+    output = offset.getDouble(0.0) * -0.02;
+    SmartDashboard.putNumber("output", output);
+    output  = output* 0.5;
+      set(-output,output);
+      
+  }
+  
+ 
+  public double gettx(){
+
+     return offset.getDouble(0.0);
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -169,22 +187,26 @@ public class Drivetrain extends SubsystemBase {
   public double getVelocity() {
     return (float)(m_masterLeftTalon.getSelectedSensorVelocity() + m_masterRightTalon.getSelectedSensorVelocity()) / 2.f;
   }
-  public void limelightalign(){
-
-    double output = 0;
-    output = offset.getDouble(0.0) * -0.1;
-    output  = output* 0.5;
-      set(-output,output);
-
-  }
   public void set(double left, double right){
+   
+    if (offset.getDouble(0.0) <= 1.0 && offset.getDouble(0.0) >= 0.0 ){
+      m_masterLeftTalon.set(0.0);
+      m_slaveLeftTalon.set(0.0);
+      m_masterRightTalon.set(0.0);
+      m_slaveLeftTalon.set(0.0);
 
+    }
+    else {
     m_masterLeftTalon.set(left*0.5);
     m_slaveLeftTalon.set(left*0.5);
     m_masterRightTalon.set(right*0.5);
     m_slaveLeftTalon.set(right*0.5);
+    }
 
+    m_drive.feed();
+   
   }
+  
 
   
   

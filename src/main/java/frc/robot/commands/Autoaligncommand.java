@@ -23,16 +23,13 @@ public class Autoaligncommand extends CommandBase {
   
   public Autoaligncommand( Drivetrain d) {
     // Use addRequirements() here to declare subsystem dependencies.
-    
     addRequirements(d);
-
-    
-   
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
     RobotContainer.m_drivetrain.limelightalign();
   }
 
