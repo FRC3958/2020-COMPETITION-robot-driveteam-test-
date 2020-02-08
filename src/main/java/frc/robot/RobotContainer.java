@@ -10,7 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.Autoaligncommand;
-import frc.robot.commands.AutonomousCommand;
+
 import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.Drivetrain;
 //import frc.robot.subsystems.Limelight;
@@ -34,8 +34,8 @@ public class RobotContainer {
   //public final static Limelight m_limelight = new Limelight();
 
   // Drivetrain
-  private final AutonomousCommand m_autoCommand = new AutonomousCommand(m_drivetrain);
-  private final Autoaligncommand m_autoalign = new Autoaligncommand(m_drivetrain);
+  private final Autoaligncommand m_align = new Autoaligncommand(m_drivetrain);
+  //private final Autoaligncommand m_autoalign = new Autoaligncommand(m_drivetrain);
   private final TurnToAngle m_angle = new TurnToAngle(0, m_drivetrain);
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -67,7 +67,7 @@ public class RobotContainer {
 
     // new JoystickButton(m_driverController, XboxController.Button.kBumperRight.value)
     //   .whenPressed(new TurnToAngle(90.f, m_drivetrain).withTimeout(5.f));
-     new JoystickButton(m_driverController,1 ).whenPressed(m_autoalign);
+     new JoystickButton(m_driverController,XboxController.Button.kA.value ).whenPressed(m_align);
   }
   /*
 {
@@ -81,7 +81,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return m_align;
   }
 
 public static void m_angle(double adjust, Drivetrain e) {

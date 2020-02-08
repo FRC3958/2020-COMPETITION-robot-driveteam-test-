@@ -148,15 +148,7 @@ public class Drivetrain extends SubsystemBase {
     //   m_masterRightTalon.get() * Constants.Drivetrain.kMaxVelocity)  / (float)Constants.Drivetrain.kMaxVelocity
     // );
   }
-  public void limelightalign(){
-
-    double output = 0;
-    output = offset.getDouble(0.0) * -0.02;
-    SmartDashboard.putNumber("output", output);
-    output  = output* 0.5;
-      set(-output,output);
-      
-  }
+ 
   
  
   public double gettx(){
@@ -187,21 +179,25 @@ public class Drivetrain extends SubsystemBase {
   public double getVelocity() {
     return (float)(m_masterLeftTalon.getSelectedSensorVelocity() + m_masterRightTalon.getSelectedSensorVelocity()) / 2.f;
   }
+  public void limelightalign(){
+
+    double output = 0;
+    output = offset.getDouble(0.0) * -0.02;
+   
+    output  = output* 0.5;
+      set(-output,output);
+      
+  }
   public void set(double left, double right){
    
-    if (offset.getDouble(0.0) <= 1.0 && offset.getDouble(0.0) >= 0.0 ){
-      m_masterLeftTalon.set(0.0);
-      m_slaveLeftTalon.set(0.0);
-      m_masterRightTalon.set(0.0);
-      m_slaveLeftTalon.set(0.0);
-
-    }
-    else {
+    
+      
+   
     m_masterLeftTalon.set(left*0.5);
     m_slaveLeftTalon.set(left*0.5);
     m_masterRightTalon.set(right*0.5);
     m_slaveLeftTalon.set(right*0.5);
-    }
+    
 
     m_drive.feed();
    

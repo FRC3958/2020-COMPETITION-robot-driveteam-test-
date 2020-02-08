@@ -50,6 +50,10 @@ public class Autoaligncommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (RobotContainer.m_drivetrain.gettx()<= 1.0 && RobotContainer.m_drivetrain.gettx() >= 0.0 ){
+      
+        return true;
+    }
     return false;
   }
 }
