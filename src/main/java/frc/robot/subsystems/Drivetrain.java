@@ -189,19 +189,12 @@ public class Drivetrain extends SubsystemBase {
       
   }
   public void set(double left, double right){
-   
-    
-      
-   
-    m_masterLeftTalon.set(left*0.5);
-    m_slaveLeftTalon.set(left*0.5);
+    m_masterLeftTalon.set(-left*0.5);
+    m_slaveLeftTalon.set(-left*0.5);
     m_masterRightTalon.set(right*0.5);
     m_slaveLeftTalon.set(right*0.5);
-    
-
-    m_drive.feed();
-   
-  }
+       m_drive.feed();
+}
   
 
   
