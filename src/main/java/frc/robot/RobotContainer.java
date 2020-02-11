@@ -9,11 +9,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.Autoaligncommand;
+import frc.robot.commands.AutoAlign;
+
 
 import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.Drivetrain;
-//import frc.robot.subsystems.Limelight;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -30,11 +31,11 @@ public class RobotContainer {
   private final XboxController m_driverController = new XboxController(Constants.OI.kDriverControllerPort);
 
   // Subsystems
-  public final static Drivetrain m_drivetrain = new Drivetrain();
+  public final Drivetrain m_drivetrain = new Drivetrain();
   //public final static Limelight m_limelight = new Limelight();
 
   // Drivetrain
-  private final Autoaligncommand m_align = new Autoaligncommand(m_drivetrain);
+  //private final Autoalign m_align = new Autoaligncommand(m_drivetrain);
   //private final Autoaligncommand m_autoalign = new Autoaligncommand(m_drivetrain);
   private final TurnToAngle m_angle = new TurnToAngle(0, m_drivetrain);
   /**
@@ -58,16 +59,18 @@ public class RobotContainer {
   private void configureButtonBindings() {
     
     // zero yaw on start button
-    new JoystickButton(m_driverController, XboxController.Button.kStart.value)
-      .whenPressed(new RunCommand(() -> m_drivetrain.resetYaw(), m_drivetrain));
+    //new JoystickButton(m_driverController, XboxController.Button.kStart.value)
+     // .whenPressed(new RunCommand(() -> m_drivetrain.resetYaw(), m_drivetrain));
 
     // turn to absolute left or right on bumpers
-    new JoystickButton(m_driverController, XboxController.Button.kBumperLeft.value)
-      .whenPressed(new TurnToAngle(-90.f, m_drivetrain).withTimeout(5.f));
+    //new JoystickButton(m_driverController, XboxController.Button.kBumperLeft.value)
+     // .whenPressed(new TurnToAngle(-90.f, m_drivetrain).withTimeout(5.f));
 
     // new JoystickButton(m_driverController, XboxController.Button.kBumperRight.value)
     //   .whenPressed(new TurnToAngle(90.f, m_drivetrain).withTimeout(5.f));
-     new JoystickButton(m_driverController,XboxController.Button.kA.value ).whenPressed(m_align);
+     new JoystickButton(m_driverController,XboxController.Button.kA.value ).whenHeld(
+       new AutoAlign(m_drivetrain)
+     );
   }
   /*
 {
@@ -81,11 +84,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_align;
+   // return m_align;
+   return null;
   }
 
-public static void m_angle(double adjust, Drivetrain e) {
-}
-
-  
 }

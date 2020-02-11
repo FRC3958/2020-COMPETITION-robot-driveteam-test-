@@ -8,8 +8,10 @@
 package frc.robot.subsystems;
 
 import java.sql.Time;
+import java.util.ResourceBundle.Control;
 import java.util.function.Consumer;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 //import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
@@ -37,15 +39,15 @@ public class Drivetrain extends SubsystemBase {
   }
   NetworkTable vision_table = NetworkTableInstance.getDefault().getTable("limelight");
  
-  private final WPI_TalonSRX m_masterLeftTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kBackLeftTalonPort);
-  private final WPI_TalonSRX m_slaveLeftTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kFrontLeftTalonPort);
-  private final WPI_TalonSRX m_masterRightTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kBackRightTalonPort);
-  private final WPI_TalonSRX m_slaveRightTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kFrontRightTalonPort);
+  public final WPI_TalonSRX m_masterLeftTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kBackLeftTalonPort);
+  public final WPI_TalonSRX m_slaveLeftTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kFrontLeftTalonPort);
+  public final WPI_TalonSRX m_masterRightTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kBackRightTalonPort);
+  public final WPI_TalonSRX m_slaveRightTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kFrontRightTalonPort);
 
   public final AHRS m_ahrs = new AHRS(SPI.Port.kMXP);
 
   private final DifferentialDrive m_drive = new DifferentialDrive(m_masterLeftTalon, m_masterRightTalon);
-  NetworkTableEntry offset = vision_table.getEntry("tx");
+   public  NetworkTableEntry offset = vision_table.getEntry("tx");
   double p;
 
   // private final PIDController m_leftPidController = new PIDController(0.f, 0.f, 0.f);
@@ -98,7 +100,7 @@ public class Drivetrain extends SubsystemBase {
     applyToTalons(TalonGroup.kAll, allTalons -> {
 
       allTalons.configFactoryDefault();
-      allTalons.setNeutralMode(NeutralMode.Coast);
+      allTalons.setNeutralMode(NeutralMode.Brake);
     });
 
     // slavery
@@ -182,24 +184,18 @@ public class Drivetrain extends SubsystemBase {
   public void limelightalign(){
 
     double output = 0;
-    output = offset.getDouble(0.0) * -0.02;
+    output = offset.getDouble(0.0) * -0.05;
    
     output  = output* 0.5;
       set(-output,output);
       
   }
   public void set(double left, double right){
-   
-    
-      
-   
-    m_masterLeftTalon.set(left*0.5);
-    m_slaveLeftTalon.set(left*0.5);
-    m_masterRightTalon.set(right*0.5);
-    m_slaveLeftTalon.set(right*0.5);
-    
-
-    m_drive.feed();
+     m_masterLeftTalon.set( ControlMode.PercentOutput,-left*0.5);
+    m_slaveLeftTalon.set(ControlMode.PercentOutput,-left*0.5);
+    m_masterRightTalon.set(ControlMode.PercentOutput,right*0.5);
+    m_slaveLeftTalon.set(ControlMode.PercentOutput,right*0.5);
+     m_drive.feed();
    
   }
   
