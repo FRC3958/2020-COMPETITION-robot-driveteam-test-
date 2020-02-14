@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.Drivetrain;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -18,10 +19,10 @@ import frc.robot.subsystems.Drivetrain;
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class AutoAlign extends PIDCommand {
 
-  static double firstSeenAngle = 0d;
+  static double firstSeenAngle = 0;
 
-  Drivetrain m_drivetrain;
-  Timer m_timer = new Timer();
+  private final Drivetrain m_drivetrain;
+  private int kCountsToFinished = 100;
 
   /**
    * Creates a new AutoAlign.
@@ -29,7 +30,7 @@ public class AutoAlign extends PIDCommand {
   public AutoAlign(Drivetrain drivetrain) {
     super(
         // The controller that the command will use
-        new PIDController(.05d, 0, 0),
+        new PIDController(0.040000d, 0.004030, 0.003099),
         // This should return the measurement
         () -> { 
           if(drivetrain.gettx() != 0d) {
@@ -42,17 +43,29 @@ public class AutoAlign extends PIDCommand {
         0,
         // This uses the output
         output -> {
-          // Use the output here
+
+          double absOutput = Math.abs(output);
+
+          if(absOutput <= .3) {
+            
+            output *= 2;
+
+          } else if(absOutput <= .6) {
+
+            output *= 1.1;
+          }
+
+          output = MathUtil.clamp(output, -1.0, +1.0);
+
+          System.out.println(output);
           drivetrain.arcadeDrive(0, output);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
     // Configure additional PID options by calling `getController` here.
-    getController().setTolerance(.7d);
+    getController().setTolerance(0.05);
 
     SmartDashboard.putData(getController());
-    m_timer.reset();
-    m_timer.stop();
 
     m_drivetrain = drivetrain;
   }
@@ -68,20 +81,22 @@ public class AutoAlign extends PIDCommand {
     SmartDashboard.putNumber("extrapolated tx", firstSeenAngle - m_drivetrain.getYaw());
   }
 
+  private int counts = 0;
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    
     if(getController().atSetpoint()) {
 
-      m_timer.start();
+      if(counts++ >= kCountsToFinished) {
 
-      if(m_timer.get() >= 5d) {
         return true;
-      } 
-    }
+      }
+    } else {
 
-    m_timer.reset();
-    m_timer.stop();
+      counts = 0;
+    }
 
     return false;
   }
