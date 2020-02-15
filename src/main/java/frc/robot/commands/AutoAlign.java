@@ -12,7 +12,9 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelightlib;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -33,8 +35,8 @@ public class AutoAlign extends PIDCommand {
         new PIDController(0.040000d, 0.004030, 0.003099),
         // This should return the measurement
         () -> { 
-          if(drivetrain.gettx() != 0d) {
-            return drivetrain.gettx();
+          if(RobotContainer.m_limelight.gettx() != 0d) {
+            return RobotContainer.m_limelight.gettx();
           } else {
             return firstSeenAngle - drivetrain.getYaw();
           }
@@ -74,8 +76,8 @@ public class AutoAlign extends PIDCommand {
   public void execute() {
     super.execute();
 
-    if(m_drivetrain.gettx() != 0d) {
-      firstSeenAngle = m_drivetrain.getYaw() + m_drivetrain.gettx();
+    if(RobotContainer.m_limelight.gettx() != 0d) {
+      firstSeenAngle = m_drivetrain.getYaw() + RobotContainer.m_limelight.gettx();
     }
 
     SmartDashboard.putNumber("extrapolated tx", firstSeenAngle - m_drivetrain.getYaw());

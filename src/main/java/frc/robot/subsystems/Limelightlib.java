@@ -24,6 +24,7 @@ public class Limelightlib extends SubsystemBase {
   NetworkTableEntry vangle;
   NetworkTableEntry ledpower;
   NetworkTableEntry cammode;
+  boolean validtarget;
 
   public Limelightlib() {
     table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -32,6 +33,7 @@ public class Limelightlib extends SubsystemBase {
     vangle = table.getEntry("tv");
     ledpower = table.getEntry("ledMode");
     cammode = table.getEntry("camMode");
+    validtarget = false;
   }
 
   public double gettx() {
@@ -44,8 +46,16 @@ public class Limelightlib extends SubsystemBase {
 
  }
  public double gettv(){
+  if (vangle.getDouble(0.0) == 0){
 
+    validtarget = false;
+
+  }
+  else {
+    validtarget = true;
+  }
   return vangle.getDouble(0.0);
+  
 
  }
 public void setledmode(int mode) {
@@ -64,6 +74,6 @@ public void setcammode(int mode){
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("txvalue", gettx());
-    SmartDashboard.putNumber("Is there a valid target?", gettv());
+    SmartDashboard.putBoolean("Is there a valid target?", validtarget);
   }
 }

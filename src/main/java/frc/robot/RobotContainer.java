@@ -65,6 +65,19 @@ public class RobotContainer {
      //operator
      new JoystickButton(m_operatController, Constants.intakebutton).whenHeld(m_putintake).whenReleased(m_putbackintake);  
      new JoystickButton(m_operatController, Constants.indexbeltbutton).whenHeld(m_run).whenReleased(m_zero);
+
+     if (m_operatController.getAButton()){
+
+      m_limelight.setledmode(3);
+      m_limelight.setcammode(0);
+
+     }
+     else {
+
+      m_limelight.setledmode(1);
+      m_limelight.setcammode(1);
+
+     }
   }
   /*
 {
