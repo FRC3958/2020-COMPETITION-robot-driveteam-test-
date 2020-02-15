@@ -9,12 +9,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.AutoAlign;
-
-
-import frc.robot.commands.TurnToAngle;
-import frc.robot.subsystems.Drivetrain;
-
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -28,16 +24,21 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
 
   // OI
-  private final XboxController m_driverController = new XboxController(Constants.OI.kDriverControllerPort);
+  private final XboxController m_driverController = new XboxController(Constants.kDriverControllerPort);
+  private final XboxController m_operatController = new XboxController(Constants.kOperatorControllerPort);
 
   // Subsystems
-  public final Drivetrain m_drivetrain = new Drivetrain();
-  //public final static Limelight m_limelight = new Limelight();
-
-  // Drivetrain
-  //private final Autoalign m_align = new Autoaligncommand(m_drivetrain);
-  //private final Autoaligncommand m_autoalign = new Autoaligncommand(m_drivetrain);
-  private final TurnToAngle m_angle = new TurnToAngle(0, m_drivetrain);
+  public static final Drivetrain m_drivetrain = new Drivetrain();
+  public static final Limelightlib m_limelight = new Limelightlib();
+  public static final Intake m_intake = new Intake();
+  public static final indexerandbelttoshooter m_index = new indexerandbelttoshooter();
+  //commands
+  public final AutoAlign m_align = new AutoAlign(m_drivetrain);
+  public final initiateintake  m_putintake = new initiateintake(m_intake);
+  public final putbackintake m_putbackintake = new putbackintake(m_intake);
+  public final runindexbelt m_run = new runindexbelt(m_index);
+  public final zeroindexerbelt m_zero = new zeroindexerbelt(m_index);
+ 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -58,19 +59,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
-    // zero yaw on start button
-    //new JoystickButton(m_driverController, XboxController.Button.kStart.value)
-     // .whenPressed(new RunCommand(() -> m_drivetrain.resetYaw(), m_drivetrain));
+    //driver
+     new JoystickButton(m_driverController,Constants.alighbutton ).whenHeld(m_align);
 
-    // turn to absolute left or right on bumpers
-    //new JoystickButton(m_driverController, XboxController.Button.kBumperLeft.value)
-     // .whenPressed(new TurnToAngle(-90.f, m_drivetrain).withTimeout(5.f));
-
-    // new JoystickButton(m_driverController, XboxController.Button.kBumperRight.value)
-    //   .whenPressed(new TurnToAngle(90.f, m_drivetrain).withTimeout(5.f));
-     new JoystickButton(m_driverController,XboxController.Button.kA.value ).whenHeld(
-       new AutoAlign(m_drivetrain)
-     );
+     //operator
+     new JoystickButton(m_operatController, Constants.intakebutton).whenHeld(m_putintake).whenReleased(m_putbackintake);  
+     new JoystickButton(m_operatController, Constants.indexbeltbutton).whenHeld(m_run).whenReleased(m_zero);
   }
   /*
 {

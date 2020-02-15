@@ -37,17 +37,17 @@ public class Drivetrain extends SubsystemBase {
   public enum TalonGroup {
     kAll, kLeft, kRight, kMasters, kSlaves
   }
-  NetworkTable vision_table = NetworkTableInstance.getDefault().getTable("limelight");
+  
  
-  public final WPI_TalonSRX m_masterLeftTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kBackLeftTalonPort);
-  public final WPI_TalonSRX m_slaveLeftTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kFrontLeftTalonPort);
-  public final WPI_TalonSRX m_masterRightTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kBackRightTalonPort);
-  public final WPI_TalonSRX m_slaveRightTalon = new WPI_TalonSRX(Constants.Drivetrain.Map.kFrontRightTalonPort);
+  public final WPI_TalonSRX m_masterLeftTalon = new WPI_TalonSRX(Constants.kBackLeftTalonPort);
+  public final WPI_TalonSRX m_slaveLeftTalon = new WPI_TalonSRX(Constants.kFrontLeftTalonPort);
+  public final WPI_TalonSRX m_masterRightTalon = new WPI_TalonSRX(Constants.kBackRightTalonPort);
+  public final WPI_TalonSRX m_slaveRightTalon = new WPI_TalonSRX(Constants.kFrontRightTalonPort);
 
   public final AHRS m_ahrs = new AHRS(SPI.Port.kMXP);
 
   private final DifferentialDrive m_drive = new DifferentialDrive(m_masterLeftTalon, m_masterRightTalon);
-   public  NetworkTableEntry offset = vision_table.getEntry("tx");
+ 
   double p;
 
   // private final PIDController m_leftPidController = new PIDController(0.f, 0.f, 0.f);
@@ -135,7 +135,7 @@ public class Drivetrain extends SubsystemBase {
     // This method will be called once per scheduler run
 
     SmartDashboard.putNumber("yaw", getYaw());
-    SmartDashboard.putNumber("tx", gettx());
+  
     SmartDashboard.putNumber(" p value for align",p );
 
     //System.out.println(timer.get() + ": " + getYaw());
@@ -153,10 +153,7 @@ public class Drivetrain extends SubsystemBase {
  
   
  
-  public double gettx(){
-
-     return offset.getDouble(0.0);
-  }
+  
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
     m_drive.tankDrive(leftSpeed, rightSpeed);
@@ -181,23 +178,7 @@ public class Drivetrain extends SubsystemBase {
   public double getVelocity() {
     return (float)(m_masterLeftTalon.getSelectedSensorVelocity() + m_masterRightTalon.getSelectedSensorVelocity()) / 2.f;
   }
-  public void limelightalign(){
-
-    double output = 0;
-    output = offset.getDouble(0.0) * -0.05;
-   
-    output  = output* 0.5;
-      set(-output,output);
-      
-  }
-  public void set(double left, double right){
-     m_masterLeftTalon.set( ControlMode.PercentOutput,-left*0.5);
-    m_slaveLeftTalon.set(ControlMode.PercentOutput,-left*0.5);
-    m_masterRightTalon.set(ControlMode.PercentOutput,right*0.5);
-    m_slaveLeftTalon.set(ControlMode.PercentOutput,right*0.5);
-     m_drive.feed();
-   
-  }
+  
   
 
   

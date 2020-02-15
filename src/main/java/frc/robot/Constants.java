@@ -17,32 +17,40 @@ package frc.robot;
  */
 public final class Constants {
 
-    public static final class Misc {
+        //Drivetrain constants
         public static final int kAhrsPort = 0;
-    }
-
-    public static final class Drivetrain {
-
-        public static final class Map {
-
-            public static final int kFrontLeftTalonPort = 1;
-            public static final int kFrontRightTalonPort = 2;
-            public static final int kBackLeftTalonPort = 3;
-            public static final int kBackRightTalonPort = 4;
-        }
-
-        /**
+        public static final int kFrontLeftTalonPort = 1;
+        public static final int kFrontRightTalonPort = 2;
+        public static final int kBackLeftTalonPort = 3;
+        public static final int kBackRightTalonPort = 4;
+         /**
          * IN TALON UNITS!!!!!!!!!!! NOT m/s!!!!!!
          */
         public static final int kMaxVelocity = 2950;
 
-        
-    }
+        //intake constants
+        public static final int intakewheels = 5;
+	    public static final int intakeonesol = 0;
+        public static final int intaketwosol = 1;
+        public static final double intakespeed = 1.5;
 
-    public static final class OI {
+        // index and belt constants
+	    public static final int indexmotor = 6;
+        public static final int beltmotor = 7;
+        public static double indexspeed  = 2;
+		public static double beltspeed = 3;
+		
+        //controller constants
         public static final int kDriverControllerPort = 0;
-    }
+        public static final int kOperatorControllerPort = 1;
+		
 
-	public static double kp = -0.1;
-	public static double mincommand = 0.05;
+        //Button constants
+            //driver controller
+        public static int alighbutton = 1;
+            //operator controller
+		public static int intakebutton = 1;
+		public static int indexbeltbutton = 2;
+		
+
 }
