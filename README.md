@@ -3,7 +3,7 @@ WILLEM AND ROHAN ONLY!!!! Do not use unless you have permission
 
 Subsystems:
   - Drivetrain, intake and limelight have their own subsystems
-  - Indexer and bekt are combined in one subsystem
+  - Indexer and belt are combined in one subsystem
   -  Keep in mind that the limelight subsystem is just a library
   - need shooter to be merged
   
