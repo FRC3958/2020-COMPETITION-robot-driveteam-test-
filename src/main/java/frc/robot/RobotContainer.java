@@ -32,13 +32,15 @@ public class RobotContainer {
   public static final Limelightlib m_limelight = new Limelightlib();
   public static final Intake m_intake = new Intake();
   public static final indexerandbelttoshooter m_index = new indexerandbelttoshooter();
+  public static final HoodedShooter m_shooter = new HoodedShooter();
   //commands
+  public final Shootatrpm m_rpm = new Shootatrpm(m_shooter);
   public final AutoAlign m_align = new AutoAlign(m_drivetrain);
   public final initiateintake  m_putintake = new initiateintake(m_intake);
   public final putbackintake m_putbackintake = new putbackintake(m_intake);
   public final runindexbelt m_run = new runindexbelt(m_index);
   public final zeroindexerbelt m_zero = new zeroindexerbelt(m_index);
- 
+  
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -65,6 +67,7 @@ public class RobotContainer {
      //operator
      new JoystickButton(m_operatController, Constants.intakebutton).whenHeld(m_putintake).whenReleased(m_putbackintake);  
      new JoystickButton(m_operatController, Constants.indexbeltbutton).whenHeld(m_run).whenReleased(m_zero);
+     new JoystickButton(m_operatController, Constants.shooterbutton).whenHeld(m_rpm).whenReleased(m_zero);
 
      if (m_operatController.getAButton()){
 

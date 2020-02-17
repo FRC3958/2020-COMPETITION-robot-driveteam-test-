@@ -50,7 +50,82 @@ public final class Constants {
         public static int alighbutton = 1;
             //operator controller
 		public static int intakebutton = 1;
-		public static int indexbeltbutton = 2;
-		
+        public static int indexbeltbutton = 2;
+        public static int shooterbutton = 3;
+        
+        public static final int kTimeout = 100;
 
-}
+        public static final int kEncoderResolution = 4096; // same encoders are used everywhere, so this is ok
+
+        //hoodedshooter talons
+        public static final int kTalonPortLeft = 5;
+        public static final int kTalonPortRight = 6;
+        
+
+        //public static final double kWheelRadius = Units.feetToMeters(4.0/12.0);
+        //public static final double kWheelCircumference = 2.0 * Math.PI * kWheelRadius;
+
+        /**
+         * Convert from meters per second to native units per 100ms
+         * @param mps
+         * @return
+         */
+        
+        /**
+         * Convert from native units per 100ms to meters per second
+         * @param velocityNative
+         * @return
+         */
+        /*public static double getVelocityMPS(int velocityNative) {
+            return ((double)velocityNative / (double)kEncoderResolution)
+                * kWheelCircumference * 10.0;
+        }
+
+        public static final int kMaxVelocityNative = 20000;
+        //public static final double kMaxVelocity = getVelocityMPS(kMaxVelocityNative);
+
+        public static final int kPrimaryPIDLoopIdx = 0;
+        public static final int kTurnPIDLoopIdx = 1;
+
+        public static final int kSlotVelocity = 0;
+        public static final int kSlotTurning  = 1;
+
+        public static final Gains kGainsVelocity = new Gains(0.0, 0.0, 0.0, 0.0);
+        public static final Gains kGainsTurn     = new Gains(0.0, 0.0, 0.0, 0.0);
+    
+
+    
+
+       
+
+        /**
+         * Convert from native units per 100ms to rotations per minute
+         * @param rpm
+         * @return
+         */
+        public static int getVelocityNative(double rpm) {
+            return (int)(rpm * (double)Constants.kEncoderResolution
+                / 60.0 / 10.0);
+        }
+
+        /**
+         * Convert from rotations per minute to native units per 100ms
+         * @param nativeVelocity
+         * @return
+         */
+        public static double getRPM(int velocityNative) {
+            return (double)((double)velocityNative / (double)Constants.kEncoderResolution
+                * 10.0 * 60.0);
+        }
+
+        public static final int kPIDLoopIdx = 0;
+
+        public static final Gains kGains = new Gains (0.025, 0.02, 0.0, 0.0);
+
+        public static final double kMinFireVelocityRPM = 2500;
+
+        public static final int kMinFireVelocity = getVelocityNative(kMinFireVelocityRPM);
+        public static final double kAcceptablePercentError = 0.02;
+    
+    }
+

@@ -9,15 +9,16 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.indexerandbelttoshooter;
+import frc.robot.subsystems.HoodedShooter;
+import frc.robot.Constants;
 
-public class zeroindexerbelt extends CommandBase {
+public class Shootatrpm extends CommandBase {
   /**
-   * Creates a new zeroindexerbelt.
+   * Creates a new Shootatrpm.
    */
-  public zeroindexerbelt(indexerandbelttoshooter i) {
+  public Shootatrpm(HoodedShooter h) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(i);
+    addRequirements(h);
   }
 
   // Called when the command is initially scheduled.
@@ -28,8 +29,12 @@ public class zeroindexerbelt extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_index.stopindexing();
-    RobotContainer.m_shooter.setRPM(0);
+    RobotContainer.m_shooter.setRPM(60);
+    if (RobotContainer.m_shooter.isReadyToShoot() == true){
+
+      RobotContainer.m_index.towardstheshooter(Constants.indexspeed, Constants.beltspeed);
+
+    }
   }
 
   // Called once the command ends or is interrupted.
