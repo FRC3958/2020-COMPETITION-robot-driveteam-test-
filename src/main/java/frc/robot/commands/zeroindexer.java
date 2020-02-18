@@ -8,15 +8,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.indexerandbelttoshooter;
 
-public class zeroindexerbelt extends CommandBase {
+public class zeroindexer extends CommandBase {
   /**
-   * Creates a new zeroindexerbelt.
+   * Creates a new zeroindexer.
    */
-  public zeroindexerbelt(indexerandbelttoshooter i) {
+  private indexerandbelttoshooter m_index;
+  public zeroindexer(indexerandbelttoshooter i) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_index = i;
     addRequirements(i);
   }
 
@@ -28,8 +29,7 @@ public class zeroindexerbelt extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_index.stopindexing();
-    RobotContainer.m_shooter.setRPM(0);
+    m_index.stopindexing();;
   }
 
   // Called once the command ends or is interrupted.

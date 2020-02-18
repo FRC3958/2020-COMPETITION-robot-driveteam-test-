@@ -49,7 +49,8 @@ public final class Constants {
             //driver controller
         public static int alighbutton = 1;
             //operator controller
-		public static int intakebutton = 1;
+        public static int intakebutton = 1;
+        public static int outtakebutton = 4;
         public static int indexbeltbutton = 2;
         public static int shooterbutton = 3;
         
@@ -126,6 +127,8 @@ public final class Constants {
 
         public static final int kMinFireVelocity = getVelocityNative(kMinFireVelocityRPM);
         public static final double kAcceptablePercentError = 0.02;
-    
+        public static final double rpm = 70;
+        
+        
     }
 

@@ -28,18 +28,19 @@ public class RobotContainer {
   private final XboxController m_operatController = new XboxController(Constants.kOperatorControllerPort);
 
   // Subsystems
-  public static final Drivetrain m_drivetrain = new Drivetrain();
-  public static final Limelightlib m_limelight = new Limelightlib();
-  public static final Intake m_intake = new Intake();
-  public static final indexerandbelttoshooter m_index = new indexerandbelttoshooter();
-  public static final HoodedShooter m_shooter = new HoodedShooter();
+  private final Drivetrain m_drivetrain = new Drivetrain();
+  private final Limelightlib m_limelight = new Limelightlib();
+  private final Intake m_intake = new Intake();
+  private final indexerandbelttoshooter m_index = new indexerandbelttoshooter();
+  private final HoodedShooter m_shooter = new HoodedShooter();
   //commands
-  public final Shootatrpm m_rpm = new Shootatrpm(m_shooter);
-  public final AutoAlign m_align = new AutoAlign(m_drivetrain);
-  public final initiateintake  m_putintake = new initiateintake(m_intake);
-  public final putbackintake m_putbackintake = new putbackintake(m_intake);
-  public final runindexbelt m_run = new runindexbelt(m_index);
-  public final zeroindexerbelt m_zero = new zeroindexerbelt(m_index);
+  private final Shootatrpm m_rpm = new Shootatrpm(m_shooter, Constants.rpm, 40);
+  private final AutoAlign m_align = new AutoAlign(m_drivetrain, m_limelight);
+  private final initiateintake  m_putintake = new initiateintake(m_intake, Constants.indexspeed);
+  private final putbackintake m_putbackintake = new putbackintake(m_intake);
+  private final runindexbelt m_run = new runindexbelt(m_index, Constants.indexspeed, Constants.beltspeed);
+  private final zeroindexer m_zero = new zeroindexer(m_index);
+  
   
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -51,6 +52,9 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(new RunCommand(() -> m_drivetrain
       .arcadeDrive(m_driverController.getY(GenericHID.Hand.kLeft), -m_driverController.getX(GenericHID.Hand.kRight)), m_drivetrain)
     );
+    m_intake.setDefaultCommand(m_putbackintake);
+    m_index.setDefaultCommand(m_zero);
+
   }
 
   /**
@@ -65,9 +69,10 @@ public class RobotContainer {
      new JoystickButton(m_driverController,Constants.alighbutton ).whenHeld(m_align);
 
      //operator
-     new JoystickButton(m_operatController, Constants.intakebutton).whenHeld(m_putintake).whenReleased(m_putbackintake);  
-     new JoystickButton(m_operatController, Constants.indexbeltbutton).whenHeld(m_run).whenReleased(m_zero);
-     new JoystickButton(m_operatController, Constants.shooterbutton).whenHeld(m_rpm).whenReleased(m_zero);
+    new JoystickButton(m_operatController,Constants.intakebutton).whenPressed(m_putintake);
+    new JoystickButton(m_operatController,Constants.outtakebutton).whenPressed(m_putbackintake);
+    new JoystickButton(m_operatController, Constants.indexbeltbutton).whenPressed(m_run);
+    new JoystickButton(m_operatController, Constants.shooterbutton).whenPressed(m_rpm);
 
      if (m_operatController.getAButton()){
 

@@ -8,16 +8,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
+
 import frc.robot.subsystems.indexerandbelttoshooter;
 
 public class runindexbelt extends CommandBase {
   /**
    * Creates a new runindexbelt.
    */
-  public runindexbelt(indexerandbelttoshooter i) {
+  private indexerandbelttoshooter m_indexer;
+  private double speed;
+  private double speedtwo;
+  public runindexbelt(indexerandbelttoshooter i, double speedi, double speedj) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_indexer = i;
+    speed = speedi;
+    speedtwo = speedj;
     addRequirements(i);
   }
 
@@ -29,7 +34,7 @@ public class runindexbelt extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_index.towardstheshooter(Constants.indexspeed, Constants.beltspeed);
+    m_indexer.towardstheshooter(speed, speedtwo);
   }
 
   // Called once the command ends or is interrupted.

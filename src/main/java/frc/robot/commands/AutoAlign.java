@@ -12,8 +12,9 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.robot.RobotContainer;
+
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelightlib;
 
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -24,19 +25,20 @@ public class AutoAlign extends PIDCommand {
   static double firstSeenAngle = 0;
 
   private final Drivetrain m_drivetrain;
+  private final Limelightlib m_limelight;
   private int kCountsToFinished = 100;
 
   /**
    * Creates a new AutoAlign.
    */
-  public AutoAlign(Drivetrain drivetrain) {
-    super(
+  public AutoAlign(Drivetrain drivetrain, Limelightlib limelight)
+{    super(
         // The controller that the command will use
         new PIDController(0.040000d, 0.004030, 0.003099),
         // This should return the measurement
         () -> { 
-          if(RobotContainer.m_limelight.gettx() != 0d) {
-            return RobotContainer.m_limelight.gettx();
+          if(limelight.gettx() != 0d) {
+            return limelight.gettx();
           } else {
             return firstSeenAngle - drivetrain.getYaw();
           }
@@ -61,7 +63,7 @@ public class AutoAlign extends PIDCommand {
 
           System.out.println(output);
           drivetrain.arcadeDrive(0, output);
-        });
+    });
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
     // Configure additional PID options by calling `getController` here.
@@ -70,14 +72,16 @@ public class AutoAlign extends PIDCommand {
     SmartDashboard.putData(getController());
 
     m_drivetrain = drivetrain;
+    
+    m_limelight = limelight;
   }
 
   @Override
   public void execute() {
     super.execute();
 
-    if(RobotContainer.m_limelight.gettx() != 0d) {
-      firstSeenAngle = m_drivetrain.getYaw() + RobotContainer.m_limelight.gettx();
+    if(m_limelight.gettx() != 0d) {
+      firstSeenAngle = m_drivetrain.getYaw() + m_limelight.gettx();
     }
 
     SmartDashboard.putNumber("extrapolated tx", firstSeenAngle - m_drivetrain.getYaw());

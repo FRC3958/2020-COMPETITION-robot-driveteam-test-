@@ -60,9 +60,9 @@ public class HoodedShooter extends SubsystemBase {
     m_slave.setInverted(InvertType.OpposeMaster);
   }
 
-  public void setNative(int targetVelocity) {
+  public void setNative(double nativenum) {
 
-    m_master.set(ControlMode.Velocity, targetVelocity);
+    m_master.set(ControlMode.Velocity, nativenum);
   }
 
   public void setRPM(double rpm) {

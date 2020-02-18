@@ -8,15 +8,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
+
 import frc.robot.subsystems.Intake;
 
 public class putbackintake extends CommandBase {
   /**
    * Creates a new putbackintake.
    */
+  private Intake m_up;
+  
   public putbackintake(Intake i) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_up = i;
+    
     addRequirements(i);
   }
 
@@ -28,7 +32,7 @@ public class putbackintake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_intake.notintaking();
+    m_up.notintaking();
   }
 
   // Called once the command ends or is interrupted.
