@@ -33,6 +33,7 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final indexerandbelttoshooter m_index = new indexerandbelttoshooter();
   private final HoodedShooter m_shooter = new HoodedShooter();
+  private final Climber m_climber = new Climber();
   //commands
   private final Shootatrpm m_rpm = new Shootatrpm(m_shooter, Constants.rpm, 40);
   private final AutoAlign m_align = new AutoAlign(m_drivetrain, m_limelight);
@@ -40,6 +41,7 @@ public class RobotContainer {
   private final putbackintake m_putbackintake = new putbackintake(m_intake);
   private final runindexbelt m_run = new runindexbelt(m_index, Constants.indexspeed, Constants.beltspeed);
   private final zeroindexer m_zero = new zeroindexer(m_index);
+  private final ShootSequence m_seq = new ShootSequence(m_drivetrain, m_limelight, m_index, m_shooter);
   
   
   /**
@@ -52,6 +54,8 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(new RunCommand(() -> m_drivetrain
       .arcadeDrive(m_driverController.getY(GenericHID.Hand.kLeft), -m_driverController.getX(GenericHID.Hand.kRight)), m_drivetrain)
     );
+    m_climber.setDefaultCommand(new RunCommand(() -> m_climber.manualControl(m_operatController.getY(GenericHID.Hand.kLeft),m_operatController.getY(GenericHID.Hand.kRight))));
+
     m_intake.setDefaultCommand(m_putbackintake);
     m_index.setDefaultCommand(m_zero);
 
@@ -73,8 +77,9 @@ public class RobotContainer {
     new JoystickButton(m_operatController,Constants.outtakebutton).whenPressed(m_putbackintake);
     new JoystickButton(m_operatController, Constants.indexbeltbutton).whenPressed(m_run);
     new JoystickButton(m_operatController, Constants.shooterbutton).whenPressed(m_rpm);
+    new JoystickButton(m_operatController, Constants.seqbutton).whenPressed(m_seq);
 
-     if (m_operatController.getAButton()){
+     if (m_operatController.getAButton() || m_operatController.getBButton()){
 
       m_limelight.setledmode(3);
       m_limelight.setcammode(0);

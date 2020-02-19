@@ -53,6 +53,9 @@ public final class Constants {
         public static int outtakebutton = 4;
         public static int indexbeltbutton = 2;
         public static int shooterbutton = 3;
+		public static int hookupmotor;
+		public static int hookdownmotor;
+		public static int seqbutton;
         
         public static final int kTimeout = 100;
 
